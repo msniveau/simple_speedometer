@@ -69,6 +69,10 @@
     <ClInclude Include="Coordinates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="httpclient.hpp" />
+    <ClInclude Include="version.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

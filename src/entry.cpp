@@ -166,7 +166,7 @@ extern "C" __declspec(dllexport) AddonDefinition* GetAddonDef()
     int V_MAJOR = 0, V_MINOR = 0, V_BUILD = 0, V_REVISION = 0;
 
     // Parse the version string
-    if (sscanf(ADDON_VERSION, "v%d.%d.%d.%d", &V_MAJOR, &V_MINOR, &V_BUILD, &V_REVISION) == 4) {
+    if (sscanf_s(ADDON_VERSION, "v%d.%d.%d.%d", &V_MAJOR, &V_MINOR, &V_BUILD, &V_REVISION) == 4) {
     }
     else {
         V_MAJOR = 0, V_MINOR = 0, V_BUILD = 0, V_REVISION = 1;
