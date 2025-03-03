@@ -18,6 +18,7 @@
 #include "settings.h"
 #include "Coordinates.h"
 #include "resource.h"
+#include "version.h"
 
 /* proto */
 void AddonLoad(AddonAPI* aApi);
@@ -161,13 +162,23 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 // GetAddonDef: Export needed to give Nexus information about the addon.
 extern "C" __declspec(dllexport) AddonDefinition* GetAddonDef()
 {
+
+    int V_MAJOR = 0, V_MINOR = 0, V_BUILD = 0, V_REVISION = 0;
+
+    // Parse the version string
+    if (sscanf(ADDON_VERSION, "v%d.%d.%d.%d", &V_MAJOR, &V_MINOR, &V_BUILD, &V_REVISION) == 4) {
+    }
+    else {
+        V_MAJOR = 0, V_MINOR = 0, V_BUILD = 0, V_REVISION = 1;
+    }
+
     AddonDef.Signature = 59330; // set to random unused negative integer
     AddonDef.APIVersion = NEXUS_API_VERSION;
     AddonDef.Name = "Simple Speedometer";
-    AddonDef.Version.Major = 1;
-    AddonDef.Version.Minor = 0;
-    AddonDef.Version.Build = 0;
-    AddonDef.Version.Revision = 1;
+    AddonDef.Version.Major = V_MAJOR;
+    AddonDef.Version.Minor = V_MINOR;
+    AddonDef.Version.Build = V_BUILD;
+    AddonDef.Version.Revision = V_REVISION;
     AddonDef.Author = "Toxxa";
     AddonDef.Description = "A lightly customizeable speedometer to show your current velocity. Comes with a functional, movement-triggered timer system.";
     AddonDef.Load = AddonLoad;
@@ -223,7 +234,7 @@ void AddonLoad(AddonAPI* aApi)
         Coordinates::Load(CoordinatesPath);
     }
 
-    APIDefs->Log(ELogLevel_DEBUG, "Load Simple Speedometer", "I am  <c=#00ff00>speed</c>.");
+    APIDefs->Log(ELogLevel_DEBUG, ADDON_NAME, "I am  <c=#00ff00>speed</c>.");
 }
 
 void ReceiveFont(const char* aIdentifier, void* aFont) {
@@ -231,7 +242,7 @@ void ReceiveFont(const char* aIdentifier, void* aFont) {
 
     if (aFont == nullptr) {
     #ifndef NDEBUG
-        APIDefs->Log(ELogLevel_CRITICAL, "ADDON_NAME", ("Received nullptr for font " + std::string(aIdentifier)).c_str());
+        APIDefs->Log(ELogLevel_CRITICAL, ADDON_NAME, ("Received nullptr for font " + std::string(aIdentifier)).c_str());
     #endif // !NDEBUG
         return;
     }
@@ -267,7 +278,7 @@ void AddonUnload()
     Settings::Save(SettingsPath);
     //Coordinates::Save(CoordinatesPath);
 
-    APIDefs->Log(ELogLevel_DEBUG, "Unload Simple Speedometer", "I am no longer <c=#ff0000>speed</c>.");
+    APIDefs->Log(ELogLevel_DEBUG, ADDON_NAME, "I am no longer <c=#ff0000>speed</c>.");
 }
 
 // Getting mumble positional data for X and Z coordinates
@@ -927,7 +938,7 @@ void UpdateTimer()
             }
             else
             {
-                APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", "No valid coordinate set selected.");
+                APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, "No valid coordinate set selected.");
             }
         }
 

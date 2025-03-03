@@ -1,6 +1,7 @@
 #include "Coordinates.h"
 #include "Settings.h"
 #include "shared.h"
+#include "version.h"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -111,10 +112,10 @@ namespace Coordinates
     }
 
     void LoadCloudConfig() {
-        APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", "Loading Cloud Config.");
+        APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, "Loading Cloud Config.");
         std::string url = "https://speedometer.cloudflare8462.workers.dev/api/config/" + Settings::cloudConfigID;
         const char* cUrl = url.c_str();
-        APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", cUrl);
+        APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, cUrl);
         std::wstring wUrl(cUrl, cUrl + strlen(cUrl));
         const std::string response = HTTPClient::GetRequest(wUrl.c_str());
         try {
@@ -166,16 +167,16 @@ namespace Coordinates
         }
         catch (std::exception& ex)
         {
-            APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", "Error parsing cloud config");
+            APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, "Error parsing cloud config");
         }
-        APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", "Cloud Config loaded");
+        APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, "Cloud Config loaded");
     }
 
 
     void Load(const std::filesystem::path& aPath)
     {
         std::lock_guard<std::mutex> lock(Mutex);
-        APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", "Loading File Config.");
+        APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, "Loading File Config.");
         // This data block is used to recreate the coordinates.json when it was missing, or the example_coordinates.json if the coordinates.json was invalid.
         nlohmann::ordered_json exampleJson = {
             {"Sets", {
@@ -220,7 +221,7 @@ namespace Coordinates
 
         if (!std::filesystem::exists(aPath))
         {
-            APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", "Missing coordinates.json! Creating coordinates.json with internal data.");
+            APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, "Missing coordinates.json! Creating coordinates.json with internal data.");
             std::ofstream exampleFile(APIDefs->Paths.GetAddonDirectory("Simple Speedometer/coordinates.json"));
             if (exampleFile.is_open())
             {
@@ -242,7 +243,7 @@ namespace Coordinates
 
             if (!j.contains("Sets") || !j["Sets"].is_object())
             {
-                APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", "Invalid format in coordinates.json!");
+                APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, "Invalid format in coordinates.json!");
                 std::ofstream exampleFile(APIDefs->Paths.GetAddonDirectory("Simple Speedometer/example_coordinates.json"));
                 if (exampleFile.is_open())
                 {
@@ -296,7 +297,7 @@ namespace Coordinates
         }
         catch (nlohmann::json::parse_error& ex)
         {
-            APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", "Error parsing coordinates.json!");
+            APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, "Error parsing coordinates.json!");
             std::ofstream exampleFile(APIDefs->Paths.GetAddonDirectory("Simple Speedometer/example_coordinates.json"));
             if (exampleFile.is_open())
             {

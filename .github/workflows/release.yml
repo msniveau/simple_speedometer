@@ -31,6 +31,16 @@ jobs:
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+      
+    - name: Extract Version from GitHub Ref
+      shell: bash
+      run: echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+      
+    - name: Update Version in version.h
+      run: |
+        $VERSION = "${{ env.VERSION }}"
+        (Get-Content src/version.h) -replace '#define ADDON_VERSION ".*"', "#define ADDON_VERSION `"$VERSION`"" | Set-Content src/version.h
+      shell: pwsh
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}

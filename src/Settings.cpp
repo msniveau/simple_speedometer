@@ -1,5 +1,6 @@
 #include "Settings.h"
 #include "shared.h"
+#include "version.h"
 #include <filesystem>
 #include <fstream>
 
@@ -90,9 +91,9 @@ namespace Settings
 			}
 			catch (json::parse_error& ex)
 			{
-				APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", "Settings.json could not be parsed.");
-				APIDefs->Log(ELogLevel_WARNING, "Simple Speedometer", ex.what());
-				APIDefs->Log(ELogLevel_DEBUG, "Simple Speedometer", "I am no longer <c=#ff0000>speed</c>.");
+				APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, "Settings.json could not be parsed.");
+				APIDefs->Log(ELogLevel_WARNING, ADDON_NAME, ex.what());
+				APIDefs->Log(ELogLevel_DEBUG, ADDON_NAME, "I am no longer <c=#ff0000>speed</c>.");
 			}
 		}
 		Settings::Mutex.unlock();
