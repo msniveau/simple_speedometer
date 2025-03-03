@@ -1,0 +1,3 @@
+﻿First automated release
+
++ Added a workflow to provide automated builds and releases if a tag gets pushed
